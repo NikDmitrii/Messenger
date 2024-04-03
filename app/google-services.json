@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "25094820303",
+    "project_id": "messenger-c7791",
+    "storage_bucket": "messenger-c7791.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:25094820303:android:4b282ea04cabfdd360c2ba",
+        "android_client_info": {
+          "package_name": "app.nik.messenger"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjcAjqDNsqNTVU4lWX-Apuke6Pnu1HvyQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
