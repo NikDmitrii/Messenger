@@ -14,6 +14,7 @@ class CorrespondenceViewModel : ViewModel() {
     {
         val timestamp = System.currentTimeMillis()
         val message = Message(_msgText.value ?: "",sender,receiver,timestamp )
+        setMsgText("")
         mDb.sendMessage(message)
     }
     fun setMsgText(value : String) {

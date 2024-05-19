@@ -1,5 +1,6 @@
 package app.nik.messenger.data
 
+import java.io.Serializable
 import java.time.Instant
 
 data class Message(
@@ -7,4 +8,4 @@ data class Message(
     val senderId : String,
     val receiverId : String,
     val timestamp : Long
-)
+) : Serializable
