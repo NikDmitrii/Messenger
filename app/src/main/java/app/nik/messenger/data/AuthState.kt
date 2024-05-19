@@ -1,0 +1,10 @@
+package app.nik.messenger.data
+
+enum class AuthState{
+    STATE_INITIALIZED,
+    STATE_CODE_SENT,
+    STATE_VERIFY_FAILED,
+    STATE_VERIFY_SUCCESS,
+    STATE_SIGNIN_FAILED,
+    STATE_SIGNIN_SUCCESS
+}

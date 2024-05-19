@@ -11,26 +11,64 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
 import app.nik.messenger.databinding.ActivityMainBinding
+import app.nik.messenger.domain.DataBaseHandler
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
-
+    private lateinit var mBinding: ActivityMainBinding
+    private lateinit var mAuth: FirebaseAuth
+    private var mIsDrawerLocked = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        mBinding = ActivityMainBinding.inflate(layoutInflater)
 
-        setSupportActionBar(binding.appBarMain.toolbar)
+        setContentView(mBinding.root)
 
-        val drawerLayout: DrawerLayout = binding.drawerLayout
-        val navView: NavigationView = binding.navView
+        setSupportActionBar(mBinding.appBarMain.toolbar)
+
+        val drawerLayout: DrawerLayout = mBinding.drawerLayout
+        val navView: NavigationView = mBinding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.nav_auth || destination.id == R.id.nav_name) {
+                // Блокируем drawer menu, когда открыт authFragment
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            } else {
+                // Разблокируем drawer menu для других фрагментов
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            }
+        }
+
+        mAuth = Firebase.auth
+        if(mAuth.currentUser == null)
+        {
+            navController.navigate(R.id.nav_auth)
+            mIsDrawerLocked = true
+        }
+        else
+        {
+            CoroutineScope(Dispatchers.Main).launch {
+                val db = DataBaseHandler()
+                val userId = Firebase.auth.currentUser!!.uid
+                if (db.userNameExistForId(userId)) {
+                    navController.navigate(R.id.nav_home)
+                } else {
+                    navController.navigate(R.id.nav_name)
+                }
+            }
+        }
+
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home, R.id.nav_settings, R.id.nav_contacts
@@ -38,10 +76,12 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
 }

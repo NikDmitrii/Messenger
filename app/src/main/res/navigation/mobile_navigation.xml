@@ -3,13 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@id/nav_auth">
 
     <fragment
         android:id="@+id/nav_home"
         android:name="app.nik.messenger.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_сorrespondenceFragment"
+            app:destination="@id/nav_msg" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_settings"
@@ -21,5 +25,35 @@
         android:id="@+id/nav_contacts"
         android:name="app.nik.messenger.ui.contacts.ContactsFragment"
         android:label="@string/menu_contacts"
-        tools:layout="@layout/fragment_contacts" />
+        tools:layout="@layout/fragment_contacts" >
+        <action
+            android:id="@+id/action_nav_contacts_to_сorrespondenceFragment"
+            app:destination="@id/nav_msg" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_auth"
+        android:name="app.nik.messenger.ui.auth.AuthFragment"
+        android:label="@string/auth_title"
+        tools:layout="@layout/fragment_auth">
+        <action
+            android:id="@+id/action_nav_auth_to_nav_home2"
+            app:destination="@id/nav_home" />
+        <action
+            android:id="@+id/action_nav_auth_to_inputNameFragment"
+            app:destination="@id/nav_name" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_name"
+        android:name="app.nik.messenger.ui.auth.InputNameFragment"
+        android:label="@string/input_name"
+        tools:layout="@layout/fragment_input_name" >
+        <action
+            android:id="@+id/action_inputNameFragment_to_nav_home"
+            app:destination="@id/nav_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_msg"
+        android:name="app.nik.messenger.ui.correspondence.СorrespondenceFragment"
+        android:label="@string/correspondence"
+        tools:layout="@layout/fragment_correspondence" />
 </navigation>
