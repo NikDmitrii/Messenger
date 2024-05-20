@@ -3,16 +3,12 @@ package app.nik.messenger.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import app.nik.messenger.data.User
+import app.nik.messenger.data.UserEvent
+import app.nik.messenger.ui.adapters.UserAdapter
 
 class HomeViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
-    }
-    val text: LiveData<String> = _text
-
-    fun setNewText(value : String)
-    {
-        _text.value = value
-    }
 }

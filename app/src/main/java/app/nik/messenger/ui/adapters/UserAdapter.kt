@@ -1,5 +1,8 @@
 package app.nik.messenger.ui.adapters
 
+import android.annotation.SuppressLint
+import android.os.Bundle
+import android.provider.Settings.Global.putString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,26 +11,30 @@ import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import app.nik.messenger.R
 import app.nik.messenger.data.Message
 import app.nik.messenger.data.User
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import java.io.Serializable
 
 
 
 
-interface userChangeListener
-{
-    fun onItemChange(item : User)
-}
 
 interface ChangeUserDialogListener{
     fun onItemChanged(item : User)
 }
+
+interface UserChangeListener
+{
+    fun onItemChange(item : User)
+}
 class UserAdapter(val items : MutableList<User>,
-                     val listener : userChangeListener? = null,
-                     val hasContextMenu: Boolean = true)
+                  val navController : NavController,
+                  val listener : UserChangeListener? = null)
     : RecyclerView.Adapter<UserAdapter.ViewHolder>(), ChangeUserDialogListener
 {
     class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView)
@@ -39,7 +46,7 @@ class UserAdapter(val items : MutableList<User>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
     {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.message_list, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.user_list, parent, false)
         return ViewHolder(view)
     }
 
@@ -52,12 +59,27 @@ class UserAdapter(val items : MutableList<User>,
 
 
 
-        if(hasContextMenu)
-        {
-            holder.nameView.setOnLongClickListener {
-                callContextMenu(holder.itemView, holder.adapterPosition)
-                true
+        holder.nameView.setOnLongClickListener {
+            callContextMenu(holder.itemView, holder.adapterPosition)
+            true
+        }
+
+        holder.nameView.setOnClickListener{
+            val user = Firebase.auth.currentUser
+            val userId = user?.uid
+            if(userId != null)
+            {
+                val senderId = userId
+                val receiverId = items[position].id
+
+                val bundle = Bundle().apply {
+                    putString("senderId", senderId)
+                    putString("receiverId", receiverId)
+                }
+
+                navController.navigate(R.id.action_nav_home_to_сorrespondenceFragment, bundle)
             }
+
         }
 
 
@@ -102,6 +124,14 @@ class UserAdapter(val items : MutableList<User>,
         {
             notifyItemChanged(position)
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setNewUserList(list : MutableList<User>)
+    {
+        items.clear()
+        items.addAll(list)
+        notifyDataSetChanged()
     }
 
     override fun onItemChanged(item: User)

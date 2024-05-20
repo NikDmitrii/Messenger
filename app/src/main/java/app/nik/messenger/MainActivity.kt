@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import app.nik.messenger.databinding.ActivityMainBinding
 import app.nik.messenger.domain.DataBaseHandler
@@ -26,7 +27,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var mAuth: FirebaseAuth
-    private var mIsDrawerLocked = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,24 +50,33 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        mAuth = Firebase.auth
-        if(mAuth.currentUser == null)
-        {
-            navController.navigate(R.id.nav_auth)
-            mIsDrawerLocked = true
-        }
-        else
-        {
-            CoroutineScope(Dispatchers.Main).launch {
-                val db = DataBaseHandler()
-                val userId = Firebase.auth.currentUser!!.uid
-                if (db.userNameExistForId(userId)) {
-                    navController.navigate(R.id.nav_home)
-                } else {
-                    navController.navigate(R.id.nav_name)
-                }
-            }
-        }
+//        mAuth = Firebase.auth
+//        if(mAuth.currentUser == null)
+//        {
+//            val navOptions = NavOptions.Builder()
+//                .setPopUpTo(R.id.nav_auth, true)
+//                .build()
+//            navController.navigate(R.id.nav_auth,null, navOptions)
+//        }
+//        else
+//        {
+//            CoroutineScope(Dispatchers.Main).launch {
+//                val db = DataBaseHandler()
+//                val userId = Firebase.auth.currentUser!!.uid
+//                if (db.userNameExistForId(userId)) {
+//
+//                    val navOptions = NavOptions.Builder()
+//                        .setPopUpTo(R.id.nav_home, true)
+//                        .build()
+//                    //navController.navigate(R.id.nav_home,null, navOptions)
+//                } else {
+//                    val navOptions = NavOptions.Builder()
+//                        .setPopUpTo(R.id.nav_name, true)
+//                        .build()
+//                    //navController.navigate(R.id.nav_name,null, navOptions)
+//                }
+//            }
+//        }
 
         appBarConfiguration = AppBarConfiguration(
             setOf(

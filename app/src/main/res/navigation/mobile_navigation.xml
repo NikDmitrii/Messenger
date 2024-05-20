@@ -36,7 +36,7 @@
         android:label="@string/auth_title"
         tools:layout="@layout/fragment_auth">
         <action
-            android:id="@+id/action_nav_auth_to_nav_home2"
+            android:id="@+id/action_nav_auth_to_nav_home"
             app:destination="@id/nav_home" />
         <action
             android:id="@+id/action_nav_auth_to_inputNameFragment"

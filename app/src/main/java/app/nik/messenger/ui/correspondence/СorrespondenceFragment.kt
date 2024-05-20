@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import app.nik.messenger.data.Message
 import app.nik.messenger.databinding.FragmentCorrespondenceBinding
 import app.nik.messenger.ui.auth.AuthViewModel
@@ -22,6 +23,8 @@ class СorrespondenceFragment : Fragment() {
     private var _binding: FragmentCorrespondenceBinding? = null
     private val mBinding get() = _binding!!
     private lateinit var mViewModel: CorrespondenceViewModel
+    private var mReceiver : String? = null
+    private var mSender : String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,14 +38,22 @@ class СorrespondenceFragment : Fragment() {
         observeViewModel()
         bindButtons()
 
+        mReceiver = arguments?.getString("receiverId")
+        mSender = arguments?.getString("senderId")
+
+        if(mSender == null || mReceiver == null)
+        {
+            findNavController().popBackStack()
+        }
+
         return root
     }
 
-    fun bindButtons(){
+    private fun bindButtons(){
         mBinding.messageSendBtn.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 try {
-                    mViewModel.sendMsg(Firebase.auth.currentUser!!.uid, "receiverUser")
+                    mViewModel.sendMsg(Firebase.auth.currentUser!!.uid, mReceiver!!)
                 } catch (e: Exception) {
                     // Обработка ошибок
                     e.printStackTrace()
@@ -51,7 +62,7 @@ class СorrespondenceFragment : Fragment() {
         }
     }
 
-    fun observeViewModel(){
+    private fun observeViewModel(){
 
 
         mViewModel.msgText.observe(viewLifecycleOwner) {

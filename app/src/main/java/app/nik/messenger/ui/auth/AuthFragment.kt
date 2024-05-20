@@ -205,9 +205,9 @@ class AuthFragment : Fragment() {
                     val db = DataBaseHandler()
                     val userId = Firebase.auth.currentUser!!.uid
                     if (db.userNameExistForId(userId)) {
-                        findNavController().navigate(R.id.nav_home)
+                        findNavController().navigate(R.id.action_nav_auth_to_nav_home)
                     } else {
-                        findNavController().navigate(R.id.nav_name)
+                        findNavController().navigate(R.id.action_nav_auth_to_inputNameFragment)
                     }
                 }
             }

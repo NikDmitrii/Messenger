@@ -34,7 +34,7 @@ class InputNameFragment : Fragment(){
 
     }
 
-    fun observeViewModel(){
+    private fun observeViewModel(){
         mViewModel.nameText.observe(viewLifecycleOwner) {
             if(!TextUtils.equals(mBinding.nameText.text,it.toString()))
             {
@@ -66,7 +66,7 @@ class InputNameFragment : Fragment(){
         }
     }
 
-    fun bindButtons(){
+    private fun bindButtons(){
         mBinding.sendName.setOnClickListener{
             mViewModel.setNameInBase(findNavController())
         }
