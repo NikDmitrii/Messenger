@@ -95,7 +95,7 @@ class HomeFragment : Fragment() {
 //                        }
 //                    }
                     val receiverUser = User("receiverUserId", "Receiver User")
-                    val msgs = db.getMessages(userId,receiverUser.id)
+                    val msgs = db.getMessages(userId,receiverUser.id!!)
                     val messagesString = msgs.joinToString("\n") { message ->
                         "senderId: ${message.senderId}, receiverId: ${message.receiverId}, content: ${message.content}, timestamp: ${message.timestamp}"
                     }

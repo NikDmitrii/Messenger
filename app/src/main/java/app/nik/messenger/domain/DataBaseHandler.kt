@@ -36,7 +36,7 @@ class DataBaseHandler {
     }
     suspend fun setUserName(user: User): Boolean {
         val isUnique = isUserNameUnique(user.name)
-        if (!isUnique) {
+        if (!isUnique || user.id == null) {
             // Если имя не уникально, возвращаем false
             return false
         }
