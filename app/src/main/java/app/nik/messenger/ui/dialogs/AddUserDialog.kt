@@ -16,9 +16,14 @@ import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import app.nik.messenger.domain.DataBaseHandler
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 interface AddUserDialogListener {
     fun onItemAdded(item: User)
@@ -67,8 +72,18 @@ class AddUserDialog() : DialogFragment()
         val addBtn : Button = view.findViewById(R.id.add_button)
         addBtn.setOnClickListener{
             val name : String = view.findViewById<EditText>(R.id.add_user_edit_text).text.toString()
+            val db = DataBaseHandler()
+            val user = Firebase.auth.currentUser
+            val userId = user?.uid
+            viewLifecycleOwner.lifecycleScope.launch {
+                val id = withContext(Dispatchers.IO) { db.findUserIdByName(name) }
+                if(id != null && userId != null && id != userId)
+                {
+                    listener?.onItemAdded(User(id, name))
+                }
 
-            dismiss()
+                dismiss()
+            }
         }
 
         val cancelBtn : Button = view.findViewById(R.id.cancel_button)

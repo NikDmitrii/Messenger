@@ -71,13 +71,16 @@ class UserAdapter(val items : MutableList<User>,
             {
                 val senderId = userId
                 val receiverId = items[position].id
+                if(receiverId != null)
+                {
+                    val bundle = Bundle().apply {
+                        putString("senderId", senderId)
+                        putString("receiverId", receiverId)
+                    }
 
-                val bundle = Bundle().apply {
-                    putString("senderId", senderId)
-                    putString("receiverId", receiverId)
+                    navController.navigate(R.id.nav_msg, bundle)
                 }
 
-                navController.navigate(R.id.action_nav_home_to_сorrespondenceFragment, bundle)
             }
 
         }

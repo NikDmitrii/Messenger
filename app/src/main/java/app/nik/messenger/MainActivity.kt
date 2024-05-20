@@ -44,9 +44,11 @@ class MainActivity : AppCompatActivity() {
             if (destination.id == R.id.nav_auth || destination.id == R.id.nav_name) {
                 // Блокируем drawer menu, когда открыт authFragment
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                    actionBar?.setDisplayHomeAsUpEnabled(false)
             } else {
                 // Разблокируем drawer menu для других фрагментов
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+                actionBar?.setDisplayHomeAsUpEnabled(true)
             }
         }
 
@@ -83,6 +85,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home, R.id.nav_settings, R.id.nav_contacts
             ), drawerLayout
         )
+
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)

@@ -205,8 +205,11 @@ class AuthFragment : Fragment() {
                     val db = DataBaseHandler()
                     val userId = Firebase.auth.currentUser!!.uid
                     if (db.userNameExistForId(userId)) {
+                        mAuthViewModel.setAuthState(AuthState.STATE_INITIALIZED)
                         findNavController().navigate(R.id.action_nav_auth_to_nav_home)
+
                     } else {
+                        mAuthViewModel.setAuthState(AuthState.STATE_INITIALIZED)
                         findNavController().navigate(R.id.action_nav_auth_to_inputNameFragment)
                     }
                 }
@@ -232,7 +235,7 @@ class AuthFragment : Fragment() {
         if (currentUser != null) {
             updateUI(AuthState.STATE_SIGNIN_SUCCESS)
         } else {
-            updateUI(AuthState.STATE_INITIALIZED)
+            updateUI(mAuthViewModel.authState.value ?: AuthState.STATE_INITIALIZED)
         }
 
         if (mAuthViewModel.mVerificationInProgress) {
