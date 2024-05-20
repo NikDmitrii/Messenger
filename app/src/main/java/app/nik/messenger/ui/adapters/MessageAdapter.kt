@@ -1,9 +1,13 @@
 package app.nik.messenger.ui.adapters
 
+import android.annotation.SuppressLint
+import android.text.TextUtils
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
@@ -11,6 +15,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import app.nik.messenger.R
 import app.nik.messenger.data.Message
+import app.nik.messenger.data.User
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import java.io.Serializable
 
 
@@ -25,10 +32,13 @@ interface ChangeDialogListener{
     fun onItemChanged(item : Message)
 }
 class MessageAdapter(val items : MutableList<Message>,
-                          val listener : itemChangeListener? = null,
-                          val hasContextMenu: Boolean = true)
+                          val listener : itemChangeListener? = null)
     : RecyclerView.Adapter<MessageAdapter.ViewHolder>(), ChangeDialogListener
 {
+    private val mUserId : String
+    init{
+        mUserId = Firebase.auth.currentUser?.uid ?: ""
+    }
     class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView)
     {
         val messageView : TextView = itemView.findViewById(R.id.message_text)
@@ -51,14 +61,19 @@ class MessageAdapter(val items : MutableList<Message>,
 
 
 
-        if(hasContextMenu)
-        {
-            holder.messageView.setOnLongClickListener {
-                callContextMenu(holder.itemView, holder.adapterPosition)
-                true
-            }
+        holder.messageView.setOnLongClickListener {
+            callContextMenu(holder.itemView, holder.adapterPosition)
+            true
         }
 
+        // Чужое сообщение
+        if(!TextUtils.equals(items[position].senderId, mUserId)) {
+            holder.messageView.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.purple_500))
+        } // Свое сообщение
+        else {
+            holder.messageView.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.purple_200))
+        }
+        holder.messageView.textSize = 18f
 
     }
 
@@ -106,5 +121,13 @@ class MessageAdapter(val items : MutableList<Message>,
     override fun onItemChanged(item: Message)
     {
         notifyItemChanged(item)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setNewMessageList(list : List<Message>)
+    {
+        items.clear()
+        items.addAll(list)
+        notifyDataSetChanged()
     }
 }

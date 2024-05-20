@@ -20,4 +20,18 @@ class CorrespondenceViewModel : ViewModel() {
     fun setMsgText(value : String) {
         _msgText.value = value
     }
+
+    fun setMsgListener(sender : String, receiver : String, onUpdate: (List<Message>) -> Unit){
+        mDb.listenForNewMessages(sender,receiver, onUpdate)
+    }
+
+    suspend fun getMessages(senderId : String , receiverId : String) : List<Message>
+    {
+        return mDb.getMessages(senderId, receiverId)
+    }
+
+    override fun onCleared() {
+        mDb.deleteMessageListener()
+        super.onCleared()
+    }
 }

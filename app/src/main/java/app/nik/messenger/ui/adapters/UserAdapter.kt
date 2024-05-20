@@ -130,7 +130,7 @@ class UserAdapter(val items : MutableList<User>,
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setNewUserList(list : MutableList<User>)
+    fun setNewUserList(list : List<User>)
     {
         items.clear()
         items.addAll(list)

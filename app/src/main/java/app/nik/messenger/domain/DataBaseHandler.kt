@@ -1,5 +1,6 @@
 package app.nik.messenger.domain
 
+import android.provider.DocumentsContract.getDocumentId
 import android.text.TextUtils
 import android.util.Log
 import app.nik.messenger.data.Message
@@ -7,6 +8,7 @@ import app.nik.messenger.data.User
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
@@ -15,7 +17,7 @@ class DataBaseHandler {
     private val mDb = Firebase.firestore
     private val mUsersCollection = mDb.collection("users")
     private val mMessagesCollection = mDb.collection("messages")
-
+    private var mMessageListener: ListenerRegistration? = null
     suspend fun findUserIdByName(name: String): String? {
         var userId: String? = null
         try {
@@ -75,6 +77,17 @@ class DataBaseHandler {
         }
     }
 
+    private fun createDocId(sender : String, receiver : String) : String
+    {
+        val (senderId, receiverId) = if (sender.compareTo(receiver) < 0) {
+            Pair(sender, receiver)
+        } else {
+            Pair(receiver, sender)
+        }
+
+        return "${senderId}_${receiverId}"
+    }
+
     suspend fun sendMessage(msg: Message): Boolean {
         return try {
             if (TextUtils.equals(msg.senderId, msg.receiverId)) {
@@ -88,13 +101,8 @@ class DataBaseHandler {
                 "timestamp" to msg.timestamp
             )
 
-            val (senderId, receiverId) = if (msg.senderId.compareTo(msg.receiverId) < 0) {
-                Pair(msg.senderId, msg.receiverId)
-            } else {
-                Pair(msg.receiverId, msg.senderId)
-            }
 
-            val docRef = mMessagesCollection.document("${senderId}_${receiverId}")
+            val docRef = mMessagesCollection.document(createDocId(msg.senderId, msg.receiverId))
             val docSnapshot = docRef.get().await()
 
             if (docSnapshot.exists()) {
@@ -112,15 +120,40 @@ class DataBaseHandler {
         }
     }
 
+    fun listenForNewMessages(sender : String, receiver : String, onUpdate: (List<Message>) -> Unit) {
+
+        mMessageListener = mMessagesCollection.document(createDocId(sender, receiver))
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Log.e(DataBaseHandler.TAG, "Error listening for new messages: ${exception.message}")
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    val messagesData = snapshot.get("messages") as? List<Map<String, Any>>
+                    val messages = messagesData?.map { messageData ->
+                        Message(
+                            senderId = messageData["senderId"] as String,
+                            receiverId = messageData["receiverId"] as String,
+                            content = messageData["content"] as String,
+                            timestamp = messageData["timestamp"] as Long
+                        )
+                    } ?: emptyList()
+
+                    onUpdate(messages)
+
+                }
+            }
+    }
+
+    fun deleteMessageListener()
+    {
+        mMessageListener?.remove()
+    }
+
 
     suspend fun getMessages(senderId: String, receiverId: String): List<Message> {
-        val (sender, receiver) = if (senderId < receiverId) {
-            Pair(senderId, receiverId)
-        } else {
-            Pair(receiverId, senderId)
-        }
-
-        val documentId = "${sender}_${receiver}"
+        val documentId = createDocId(senderId, receiverId)
         val documentSnapshot = mMessagesCollection.document(documentId).get().await()
         val messagesData = documentSnapshot.get("messages") as? List<Map<String, Any>>
 
