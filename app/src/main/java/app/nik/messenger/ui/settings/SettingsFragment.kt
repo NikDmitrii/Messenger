@@ -17,12 +17,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
 class SettingsFragment : PreferenceFragmentCompat() {
-
-    //private var _binding: FragmentSettingsBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    //private val mBinding get() = _binding!!
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_pref, rootKey)
 
@@ -39,26 +33,4 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
     }
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View {
-//        val galleryViewModel =
-//            ViewModelProvider(this).get(SettingsViewModel::class.java)
-//
-//        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
-//        val root: View = mBinding.root
-//
-//        val textView: TextView = mBinding.textSettings
-//        galleryViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
-//        return root
-//    }
-//
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        _binding = null
-//    }
 }

@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.nik.messenger.data.User
 import app.nik.messenger.databinding.FragmentContactsBinding
+import app.nik.messenger.domain.UsersParser
 import app.nik.messenger.ui.adapters.UserAdapter
 import app.nik.messenger.ui.dialogs.AddUserDialog
 import app.nik.messenger.ui.dialogs.AddUserDialogListener
@@ -23,13 +24,15 @@ class ContactsFragment : Fragment(), AddUserDialogListener {
     // onDestroyView.
     private val mBinding get() = _binding!!
     private lateinit var mUserAdapter: UserAdapter
+    private lateinit var mUserParser : UsersParser
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mUserParser = UsersParser("users.json", requireContext())
         observeViewModel()
         initRecyclerView()
-
+        initButtons()
     }
 
     override fun onCreateView(
@@ -43,8 +46,6 @@ class ContactsFragment : Fragment(), AddUserDialogListener {
 
         _binding = FragmentContactsBinding.inflate(inflater, container, false)
         val root: View = mBinding.root
-        initRecyclerView()
-        initButtons()
 
         return root
     }
@@ -56,7 +57,8 @@ class ContactsFragment : Fragment(), AddUserDialogListener {
 
 
     private fun initRecyclerView() {
-        mUserAdapter = UserAdapter(mutableListOf(), findNavController())
+        val list = mUserParser.readUsers()
+        mUserAdapter = UserAdapter(list, findNavController())
         mBinding.contactRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         mBinding.contactRecyclerView.adapter = mUserAdapter
 
@@ -76,5 +78,6 @@ class ContactsFragment : Fragment(), AddUserDialogListener {
 
     override fun onItemAdded(item: User) {
         mUserAdapter.pushBack(item)
+        mUserParser.writeAllUsers(mUserAdapter.items)
     }
 }

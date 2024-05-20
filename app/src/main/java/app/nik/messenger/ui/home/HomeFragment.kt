@@ -29,6 +29,7 @@ import app.nik.messenger.data.User
 import app.nik.messenger.data.AuthState
 
 import app.nik.messenger.domain.DataBaseHandler
+import app.nik.messenger.domain.UsersParser
 import app.nik.messenger.ui.adapters.UserAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -42,6 +43,7 @@ class HomeFragment : Fragment() {
     private val mBinding get() = _binding!!
     private lateinit var mViewModel : HomeViewModel
     private lateinit var mUserAdapter: UserAdapter
+    private lateinit var mUserParser : UsersParser
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,7 +61,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        mUserParser = UsersParser("users.json",requireContext())
         observeViewModel()
         initRecyclerView()
 
@@ -73,12 +75,10 @@ class HomeFragment : Fragment() {
 
     private fun initRecyclerView()
     {
-        mUserAdapter = UserAdapter(mutableListOf(), findNavController())
+        val list = mUserParser.readUsers()
+        mUserAdapter = UserAdapter(list, findNavController())
         mBinding.contactRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         mBinding.contactRecyclerView.adapter = mUserAdapter
-
-        mUserAdapter.pushBack(User("Testid","Tim"))
-        mUserAdapter.pushBack(User("Testid2","Tom"))
     }
 
     override fun onDestroyView() {
