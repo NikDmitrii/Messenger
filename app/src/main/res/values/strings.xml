@@ -21,4 +21,8 @@
     <string name="input_name">Input Name</string>
     <string name="input_msg">Input message</string>
     <string name="correspondence">Correspondence</string>
+    <string name="delete">Delete</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="user_name_input">Input user name</string>
 </resources>

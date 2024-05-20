@@ -146,5 +146,4 @@ class DataBaseHandler {
     companion object{
         const val TAG = "DataBaseHandler"
     }
-
 }

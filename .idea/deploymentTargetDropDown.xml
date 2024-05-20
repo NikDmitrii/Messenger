@@ -5,6 +5,9 @@
       <entry key="AuthFragmentTest">
         <State />
       </entry>
+      <entry key="InputNameFragmentTest">
+        <State />
+      </entry>
       <entry key="app">
         <State>
           <targetSelectedWithDropDown>
@@ -20,6 +23,9 @@
           </targetSelectedWithDropDown>
           <timeTargetWasSelectedWithDropDown value="2024-04-29T18:53:06.704608700Z" />
         </State>
+      </entry>
+      <entry key="testInputNameFragmentViews()">
+        <State />
       </entry>
     </value>
   </component>

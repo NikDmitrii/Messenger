@@ -41,3 +41,4 @@ class AuthFragmentTest {
         onView(withId(R.id.resend_btn)).check(matches(not(isEnabled())))
     }
 }
+

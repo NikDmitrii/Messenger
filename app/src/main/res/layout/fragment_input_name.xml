@@ -20,7 +20,7 @@
         android:id="@+id/name_text"
         android:layout_width="match_parent"
         android:layout_height="@dimen/text_height"
-        android:layout_marginTop="@dimen/long_margin"
+        android:layout_marginTop="100dp"
         android:hint="@string/input_name"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,6 +33,7 @@
         android:id="@+id/name_info"
         android:layout_width="match_parent"
         android:layout_height="@dimen/text_height"
+        android:layout_marginTop="@dimen/medium_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name_text" />
