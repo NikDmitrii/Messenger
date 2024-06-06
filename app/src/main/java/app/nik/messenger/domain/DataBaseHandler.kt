@@ -176,6 +176,23 @@ class DataBaseHandler {
             false
         }
     }
+
+    suspend fun getUserNameById(userId : String): String?{
+        return try {
+            val documentSnapshot = mUsersCollection.document(userId).get().await()
+            if(documentSnapshot.exists())
+            {
+                documentSnapshot.getString("name")
+            }
+            else
+            {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+    }
     companion object{
         const val TAG = "DataBaseHandler"
     }

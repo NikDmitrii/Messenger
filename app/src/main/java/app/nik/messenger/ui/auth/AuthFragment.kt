@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import app.nik.messenger.MainActivity
 import app.nik.messenger.R
 import app.nik.messenger.databinding.FragmentAuthBinding
 import app.nik.messenger.ui.home.HomeViewModel
@@ -25,6 +26,7 @@ import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.auth
 import app.nik.messenger.data.AuthState
 import app.nik.messenger.domain.DataBaseHandler
+import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -205,6 +207,13 @@ class AuthFragment : Fragment() {
                     val db = DataBaseHandler()
                     val userId = Firebase.auth.currentUser!!.uid
                     if (db.userNameExistForId(userId)) {
+                        val userName = db.getUserNameById(userId)
+                        (activity as? MainActivity)?.let { mainActivity ->
+                            val navigationView: NavigationView = mainActivity.findViewById(R.id.nav_view)
+                            val headerView: View = navigationView.getHeaderView(0)
+                            val drawerTextView: TextView = headerView.findViewById(R.id.drawer_title)
+                            drawerTextView.text = userName
+                        }
                         mAuthViewModel.setAuthState(AuthState.STATE_INITIALIZED)
                         findNavController().navigate(R.id.action_nav_auth_to_nav_home)
 

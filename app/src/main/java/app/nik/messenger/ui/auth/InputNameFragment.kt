@@ -68,7 +68,7 @@ class InputNameFragment : Fragment(){
 
     private fun bindButtons(){
         mBinding.sendName.setOnClickListener{
-            mViewModel.setNameInBase(findNavController())
+            mViewModel.setNameInBase(findNavController(), activity)
         }
     }
 

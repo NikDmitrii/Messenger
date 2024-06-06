@@ -52,33 +52,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        mAuth = Firebase.auth
-//        if(mAuth.currentUser == null)
-//        {
-//            val navOptions = NavOptions.Builder()
-//                .setPopUpTo(R.id.nav_auth, true)
-//                .build()
-//            navController.navigate(R.id.nav_auth,null, navOptions)
-//        }
-//        else
-//        {
-//            CoroutineScope(Dispatchers.Main).launch {
-//                val db = DataBaseHandler()
-//                val userId = Firebase.auth.currentUser!!.uid
-//                if (db.userNameExistForId(userId)) {
-//
-//                    val navOptions = NavOptions.Builder()
-//                        .setPopUpTo(R.id.nav_home, true)
-//                        .build()
-//                    //navController.navigate(R.id.nav_home,null, navOptions)
-//                } else {
-//                    val navOptions = NavOptions.Builder()
-//                        .setPopUpTo(R.id.nav_name, true)
-//                        .build()
-//                    //navController.navigate(R.id.nav_name,null, navOptions)
-//                }
-//            }
-//        }
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
